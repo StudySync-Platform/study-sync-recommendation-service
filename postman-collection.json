@@ -1,0 +1,195 @@
+{
+    "info": {
+        "name": "StudySync Recommendation Service",
+        "description": "API collection for testing the recommendation service endpoints",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Interactions",
+            "item": [
+                {
+                    "name": "Create Like Interaction",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"userId\": 1,\n  \"postId\": 100,\n  \"interactionType\": \"LIKE\",\n  \"category\": \"programming\",\n  \"metadata\": \"{\\\"source\\\": \\\"web\\\"}\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8084/api/v1/interactions",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8084",
+                            "path": [
+                                "api",
+                                "v1",
+                                "interactions"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Comment Interaction",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"userId\": 1,\n  \"postId\": 101,\n  \"interactionType\": \"COMMENT\",\n  \"category\": \"mathematics\",\n  \"metadata\": \"{\\\"comment_id\\\": 42}\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8084/api/v1/interactions",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8084",
+                            "path": [
+                                "api",
+                                "v1",
+                                "interactions"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get User Stats",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:8084/api/v1/interactions/user/1/stats",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8084",
+                            "path": [
+                                "api",
+                                "v1",
+                                "interactions",
+                                "user",
+                                "1",
+                                "stats"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Post Stats",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:8084/api/v1/interactions/post/100/stats",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8084",
+                            "path": [
+                                "api",
+                                "v1",
+                                "interactions",
+                                "post",
+                                "100",
+                                "stats"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Recommendations",
+            "item": [
+                {
+                    "name": "Get User Recommendations",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:8084/api/v1/recommendations/user/1",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8084",
+                            "path": [
+                                "api",
+                                "v1",
+                                "recommendations",
+                                "user",
+                                "1"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Generate Recommendations",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:8084/api/v1/recommendations/user/1/generate",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8084",
+                            "path": [
+                                "api",
+                                "v1",
+                                "recommendations",
+                                "user",
+                                "1",
+                                "generate"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Trending Posts",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:8084/api/v1/recommendations/trending?limit=10",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8084",
+                            "path": [
+                                "api",
+                                "v1",
+                                "recommendations",
+                                "trending"
+                            ],
+                            "query": [
+                                {
+                                    "key": "limit",
+                                    "value": "10"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

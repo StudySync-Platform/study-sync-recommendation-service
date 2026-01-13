@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: recommendation-service-test
+  
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+  
+  kafka:
+    bootstrap-servers: ${spring.embedded.kafka.brokers}
+  
+  redis:
+    host: localhost
+    port: 6379
+
+app:
+  kafka:
+    topics:
+      user-interaction: test-user-interaction-events
+      post-recommendation: test-post-recommendation-events
+  
+  recommendation:
+    like-weight: 1.0
+    comment-weight: 2.0
+    share-weight: 3.0
+    view-weight: 0.5
+    time-decay-factor: 0.95
+    max-recommendations: 20
