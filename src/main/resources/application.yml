@@ -7,15 +7,27 @@ spring:
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
   
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+    open-in-view: false
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
+        "[format_sql]": true
+        jdbc:
+          "[time_zone]": UTC
+        "[order_inserts]": true
+        "[order_updates]": true
+        "[batch_size]": 20
   
   kafka:
     bootstrap-servers: localhost:9092
@@ -25,20 +37,54 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        spring.json.trusted.packages: "*"
+        "[spring.json.trusted.packages]": "*"
+        "[spring.json.value.default.type]": com.studysync.recommendation.dto.UserInteractionEvent
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       properties:
-        spring.json.add.type.headers: false
+        "[spring.json.add.type.headers]": false
+    properties:
+      "[max.poll.interval.ms]": 300000
+      "[session.timeout.ms]": 60000
   
   redis:
     host: localhost
     port: 6379
-    timeout: 60000
+    timeout: 60s
+
+  data:
+    redis:
+      repositories:
+        enabled: false
+
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+      fail-on-empty-beans: false
+    deserialization:
+      fail-on-unknown-properties: false
+    default-property-inclusion: non_null
+    time-zone: UTC
 
 server:
   port: 8084
+  error:
+    include-message: always
+    include-binding-errors: always
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when-authorized
+  metrics:
+    export:
+      prometheus:
+        enabled: true
 
 # Custom application properties
 app:
@@ -63,3 +109,7 @@ logging:
     com.studysync.recommendation: DEBUG
     org.springframework.kafka: INFO
     org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
