@@ -12,7 +12,10 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "post_scores", indexes = {
         @Index(name = "idx_post_score_post_id", columnList = "postId"),
-        @Index(name = "idx_post_score_updated", columnList = "lastUpdated")
+        @Index(name = "idx_post_score_updated", columnList = "lastUpdated"),
+        @Index(name = "idx_post_score_category", columnList = "category"),
+        @Index(name = "idx_post_score_author", columnList = "authorId"),
+        @Index(name = "idx_post_score_total", columnList = "totalScore")
 })
 @Data
 @Builder
@@ -26,6 +29,12 @@ public class PostScore {
 
     @Column(nullable = false, unique = true)
     private Long postId;
+
+    @Column
+    private Long authorId;
+
+    @Column
+    private String category;
 
     @Column(nullable = false)
     private Double totalScore;

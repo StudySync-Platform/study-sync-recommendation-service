@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+package recommendation;
+
+option java_package = "com.studysync.recommendation.grpc";
+option java_multiple_files = true;
+option java_outer_classname = "RecommendationProto";
+
+// Service for fetching post details from Laravel backend
+service PostDetailService {
+  // Get detailed information about a single post
+  rpc GetPostInfo (PostRequest) returns (PostResponse);
+  
+  // Get details for multiple posts in batch
+  rpc GetBatchPostInfo (BatchPostRequest) returns (BatchPostResponse);
+  
+  // Get user profile for personalization
+  rpc GetUserProfile (UserProfileRequest) returns (UserProfileResponse);
+}
+
+// Request for a single post
+message PostRequest {
+  int64 post_id = 1;
+}
+
+// Response with post details
+message PostResponse {
+  int64 id = 1;
+  string title = 2;
+  string content = 3;
+  string category = 4;
+  int64 author_id = 5;
+  string author_name = 6;
+  string created_at = 7;
+  repeated string tags = 8;
+  int32 like_count = 9;
+  int32 comment_count = 10;
+  int32 view_count = 11;
+  bool is_published = 12;
+}
+
+// Request for batch posts
+message BatchPostRequest {
+  repeated int64 post_ids = 1;
+}
+
+// Response with multiple posts
+message BatchPostResponse {
+  repeated PostResponse posts = 1;
+}
+
+// Request for user profile
+message UserProfileRequest {
+  int64 user_id = 1;
+}
+
+// Response with user profile for personalization
+message UserProfileResponse {
+  int64 id = 1;
+  string name = 2;
+  string email = 3;
+  repeated string interests = 4;
+  repeated string followed_categories = 5;
+  repeated int64 followed_user_ids = 6;
+  string preferred_language = 7;
+  string timezone = 8;
+}

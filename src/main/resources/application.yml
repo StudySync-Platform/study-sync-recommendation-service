@@ -35,15 +35,22 @@ spring:
       group-id: recommendation-service-group
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      enable-auto-commit: false
       properties:
         "[spring.json.trusted.packages]": "*"
-        "[spring.json.value.default.type]": com.studysync.recommendation.dto.UserInteractionEvent
+        "[max.poll.records]": 100
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      retries: 3
       properties:
         "[spring.json.add.type.headers]": false
+        "[acks]": all
+        "[enable.idempotence]": true
+    listener:
+      ack-mode: manual
+      concurrency: 3
     properties:
       "[max.poll.interval.ms]": 300000
       "[session.timeout.ms]": 60000
@@ -86,12 +93,22 @@ management:
       prometheus:
         enabled: true
 
+# gRPC Client Configuration
+grpc:
+  client:
+    laravel:
+      host: localhost
+      port: 6001
+      timeout-seconds: 5
+
 # Custom application properties
 app:
   kafka:
     topics:
       user-interaction: user-interaction-events
       post-recommendation: post-recommendation-events
+      post-lifecycle: post-lifecycle-events
+      dlq: recommendation-dlq
   
   recommendation:
     # Weight factors for recommendation algorithm
@@ -99,6 +116,7 @@ app:
     comment-weight: 2.0
     share-weight: 3.0
     view-weight: 0.5
+    bookmark-weight: 2.5
     # Time decay factor (how much older posts are penalized)
     time-decay-factor: 0.95
     # Maximum recommendations to generate
@@ -108,8 +126,10 @@ logging:
   level:
     com.studysync.recommendation: DEBUG
     org.springframework.kafka: INFO
+    io.grpc: INFO
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
